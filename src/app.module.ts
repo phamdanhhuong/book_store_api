@@ -4,10 +4,12 @@ import { AppService } from './app.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { DataSourceOption } from './config/ormconfig';
 import { BookModule } from './books/book.module';
+import { UserModule } from './users/user.module';
+import { AuthModule } from './auth/auth.module';
 
 
 @Module({
-  imports: [TypeOrmModule.forRoot(DataSourceOption), BookModule],
+  imports: [TypeOrmModule.forRoot(DataSourceOption), BookModule,UserModule,AuthModule],
   controllers: [AppController],
   providers: [AppService],
 })
