@@ -24,7 +24,7 @@ export class BookService{
     }
 
     async getBookByIdCategory(id:number): Promise<Book[]> {
-        const result = await this.bookRepository.query("SELECT * FROM books WHERE categoryId = "+id);
+        const result = await this.bookRepository.query("SELECT * FROM books WHERE category_id = "+id);
         return result;
     }
 }

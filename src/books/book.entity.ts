@@ -1,4 +1,4 @@
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 import { Category } from "./category.entity";
 
 @Entity("books")
@@ -12,7 +12,8 @@ export class Book{
     @Column()
     author: string;
 
-    @ManyToOne(() => Category, (category) => category.books, { eager: true })
+    @ManyToOne(() => Category, (category) => category.books)
+    @JoinColumn({name:"category_id"})
     category: Category;
 
     @Column()

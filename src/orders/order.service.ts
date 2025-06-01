@@ -29,16 +29,34 @@ export class OrderService{
         const book = await this.bookRepo.findOneBy({ id: bookId });
         if (!book) throw new Error('Book not found');
         
-        const cart = this.cartRepo.create({ user, book, quantity });
-        await this.cartRepo.save(cart);
-        return cart;
+        let cartItem = await this.cartRepo.findOne({
+            where: {
+            user: { id: userId },
+            book: { id: bookId },
+            },
+            relations: ['user', 'book'],
+        });
+
+        if (cartItem) {
+            cartItem.quantity += quantity;
+        } else {
+            cartItem = this.cartRepo.create({ user, book, quantity });
+        }
+        await this.cartRepo.save(cartItem);
+        return cartItem;
     }
 
     async getCart(userId: number) {
-        return await this.cartRepo.find({
+        const cartItems = await this.cartRepo.find({
             where: { user: { id: userId } },
             relations: ['book'],
         });
+        for (const item of cartItems){
+            const book = await this.bookRepo.query("SELECT * FROM books WHERE id = "+item.book.id);
+            if (!book) throw new Error('Book not found');
+            item.book = book[0];
+        }
+        return cartItems;
     }
 
 }

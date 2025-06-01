@@ -15,7 +15,7 @@ INSERT INTO categories (name,cover_url) VALUES
 ('Python','https://m.media-amazon.com/images/I/81kqrwS1nNL.jpg');
 
 
-INSERT INTO books (title, author, categoryId, publisher, publication_date, summary, cover_url, price) VALUES
+INSERT INTO books (title, author, category_id, publisher, publication_date, summary, cover_url, price) VALUES
 ('Refactoring', 'Martin Fowler', 1, 'Addison-Wesley', '1999-07-08', 'Improving the Design of Existing Code', 'https://martinfowler.com/books/r2p.jpg', 189000),
 ('Code Complete', 'Steve McConnell', 1, 'Microsoft Press', '2004-06-19', 'A Practical Handbook of Software Construction', 'https://upload.wikimedia.org/wikipedia/en/5/58/Code_Complete_1st_edition.jpg', 230000),
 ('You Don\'t Know JS', 'Kyle Simpson', 2, 'O\'Reilly Media', '2014-12-27', 'Deep dive into JavaScript core mechanisms', 'https://m.media-amazon.com/images/I/71FU6nxVhAL._AC_UF1000,1000_QL80_.jpg', 99000),
