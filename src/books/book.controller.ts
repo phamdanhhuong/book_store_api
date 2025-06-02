@@ -1,7 +1,8 @@
-import {Body, Controller, Get, Post } from "@nestjs/common";
+import {Body, Controller, Get, Post, Query } from "@nestjs/common";
 import { BookService } from "./book.service";
 import { Book } from "./book.entity";
 import { Category } from "./category.entity";
+import { BookFilterDto } from "src/dto/book-filter.dto";
 
 @Controller("/book")
 export class BookController{
@@ -23,6 +24,11 @@ export class BookController{
     async getBookByIdCategory(@Body() body : { categoryId: number }): Promise<Book[]>{
         const categoryId = body.categoryId;
         return this.bookService.getBookByIdCategory(categoryId);
+    }
+
+    @Get('filter')
+    async filterBooks(@Query() filterDto: BookFilterDto) {
+        return await this.bookService.filterBooks(filterDto);
     }
     
 }

@@ -59,4 +59,13 @@ export class OrderService{
         return cartItems;
     }
 
+    async removeItemFromCart(cartId: number) {
+        const cartItem = await this.cartRepo.findOne({ where: { id: cartId }});
+        if (!cartItem) throw new Error('Cart item not found');
+        try {
+           return await this.cartRepo.remove(cartItem);
+        } catch (error) {
+            throw new Error('Failed to remove item from cart');
+        }
+    }
 }

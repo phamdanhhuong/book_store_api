@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Post, Req, UseGuards } from "@nestjs/common";
+import { Body, Controller, Delete, Get, Param, Post, Req, UseGuards } from "@nestjs/common";
 import { OrderService } from "./order.service";
 import { AuthGuard } from "src/auth/auth.guard";
 import { AddToCartDto } from "src/dto/add_to_cart.dto";
@@ -20,5 +20,10 @@ export class OrderController{
     async getCart(@Req() req) {
         const userId = req.user.sub
         return await this.orderService.getCart(userId);
+    }
+
+    @Delete('/remove-item/:cartId')
+    async removeItemFromCart(@Req() req, @Param('cartId') cartId){
+        return await this.orderService.removeItemFromCart(cartId);    
     }
 }
