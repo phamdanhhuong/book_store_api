@@ -1,11 +1,12 @@
 import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Order } from "./order.entity";
-import { Repository } from "typeorm";
+import { In, Repository } from "typeorm";
 import { OrderItem } from "./order_items.entity";
 import { Cart } from "./cart.entity";
 import { User } from "src/users/user.entity";
 import { Book } from "src/books/book.entity";
+import { PlaceOrderDto } from "src/dto/place_order.dto";
 
 
 @Injectable()
@@ -68,4 +69,62 @@ export class OrderService{
             throw new Error('Failed to remove item from cart');
         }
     }
+
+    async createOrder(placeOrder: PlaceOrderDto, userId: number) {
+        const user = await this.userRepo.findOneBy({ id: userId });
+        if (!user) throw new Error('User not found');
+
+        var itemCarts = await this.cartRepo.find({
+            where: { id: In(placeOrder.itemIds)},
+            relations: ['book'],
+        });
+
+        if (itemCarts.length === 0) {
+            throw new Error('No items in cart');
+        }
+        if (itemCarts.length !== placeOrder.itemIds.length) {
+            throw new Error('Some cart items are invalid or not found');
+        }
+
+        var order = new Order();
+        order.shipping_address = placeOrder.address;
+        order.payment_method = placeOrder.payment_method;
+        order.user = user;
+
+        var totalPrice = 0;
+        var orderItems: OrderItem[] = [];
+        for (const item of itemCarts){
+            var orderItem = new OrderItem();
+            orderItem.book = item.book;
+            orderItem.quantity = item.quantity;
+            orderItem.price = item.book.price;
+            orderItem.order = order;
+            orderItems.push(orderItem);
+
+            totalPrice += item.book.price * item.quantity;
+        }
+
+        order.items = orderItems;
+        order.total_price = totalPrice;
+
+        await this.orderRepo.save(order);
+        await this.orderItemRepo.save(orderItems);
+        await this.cartRepo.remove(itemCarts);
+
+        const { user:_, ...rest } = order;
+        var restOrder = {
+            ...rest,
+            items: order.items.map(({ order, ...rest }) => rest)
+        };
+
+        return restOrder;
+    }
+    async getOrders(userId: number) {
+        const orders = await this.orderRepo.find({
+            where: { user: { id: userId } },
+            relations: ['items', 'items.book'],
+        });
+        return orders;
+    }
+        
 }
