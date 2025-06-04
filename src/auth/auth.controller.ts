@@ -26,4 +26,10 @@ export class AuthController {
   signUp(@Body() signUnDto: SignUpDto) {
     return this.authService.signUp(signUnDto);
   }
+
+  @HttpCode(HttpStatus.OK)
+  @Post('verify-otp')
+  verifyOtp(@Body() dto: { email: string; otp: string }) {
+    return this.authService.verifyOtp(dto.email, dto.otp);
+  }
 }
