@@ -1,8 +1,8 @@
 CREATE DATABASE  IF NOT EXISTS book_store;
 use book_store;
 
-INSERT INTO users (username,password, fullname,email, phone_number) VALUES
-('huong','123456','Phạm Danh Hưởng','danhhuong@gmail.com','0361212121');
+INSERT INTO users (username,password, fullname,email, phone_number,is_verified) VALUES
+('huong','123456','Phạm Danh Hưởng','danhhuong@gmail.com','0361212121',1);
 
 INSERT INTO categories (name,cover_url) VALUES
 ('Programming','https://martinfowler.com/books/r2p.jpg'),
